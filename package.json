@@ -1,0 +1,26 @@
+{
+  "name": "loginprofesional",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tu_usuario/login-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tu_usuario/login-web/issues"
+  },
+  "homepage": "https://github.com/tu_usuario/login-web#readme",
+  "description": "",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1"
+  },
+  "devDependencies": {
+    "vite": "^6.2.2"
+  }
+}

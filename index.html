@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Profesional</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Login Profesional</h1>
+        
+        <form id="auth-form">
+            <input type="email" id="email" placeholder="Correo electrónico" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="button" id="toggle-password">👁</button>
+            </div>
+            <button type="submit" id="login-btn">Iniciar Sesión</button>
+            <button type="button" id="signup-btn">Registrarse</button>
+        </form>
+
+        <button type="button" id="logout-btn" style="display: none;">Cerrar Sesión</button>
+
+        <p id="message"></p>
+    </div>
+</body>
+</html>
+
