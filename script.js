@@ -21,7 +21,7 @@ function showMessage(text, type) {
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Verificar sesión pero no asumir que está activa
+// Verificar sesión sin redirección automática
 async function checkSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -32,8 +32,9 @@ async function checkSession() {
 
     if (session && session.user) {
         console.log("✅ Usuario autenticado:", session.user.email);
+        showMessage("✅ Sesión iniciada como " + session.user.email, "success");
 
-        // Solo mostrar el botón "Ir a Mi Perfil" si el usuario hizo login manualmente
+        // Mostrar el botón "Ir a Mi Perfil" en lugar de redirigir automáticamente
         if (profileLink) profileLink.style.display = "block";
         if (logoutBtn) logoutBtn.style.display = "block";
     } else {
@@ -68,7 +69,7 @@ signupBtn.addEventListener("click", async (e) => {
     }
 });
 
-// Inicio de sesión
+// Inicio de sesión SIN REDIRECCIÓN AUTOMÁTICA
 loginBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -86,10 +87,9 @@ loginBtn.addEventListener("click", async (e) => {
     } else {
         showMessage("✅ Bienvenido " + email, "success");
 
-        // Redirigir a perfil.html después del login manual
-        setTimeout(() => {
-            window.location.href = "perfil.html";
-        }, 1000);
+        // Mostrar el botón "Ir a Mi Perfil" en lugar de redirigir
+        if (profileLink) profileLink.style.display = "block";
+        if (logoutBtn) logoutBtn.style.display = "block";
     }
 });
 
