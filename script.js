@@ -12,7 +12,7 @@ const signupBtn = document.getElementById("signup-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const message = document.getElementById("message");
 
-// Función para mostrar mensajes con colores
+// Función para mostrar mensajes
 function showMessage(text, type) {
     message.textContent = text;
     message.className = type;
@@ -20,7 +20,7 @@ function showMessage(text, type) {
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Redirección tras confirmación del correo
+// Manejar la sesión sin loop infinito
 async function checkSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -33,17 +33,21 @@ async function checkSession() {
         console.log("Usuario autenticado:", session.user.email);
         showMessage("✅ Sesión iniciada como " + session.user.email, "success");
 
-        // Redirigir al usuario a su perfil
-        setTimeout(() => {
-            window.location.href = "perfil.html";
-        }, 1000);
+        // Si ya está en perfil, no redirigir
+        if (window.location.pathname !== "/perfil.html") {
+            setTimeout(() => {
+                window.location.href = "perfil.html";
+            }, 1000);
+        }
     }
 }
 
-// Ejecutar la verificación de sesión al cargar la página
-document.addEventListener("DOMContentLoaded", checkSession);
+// Ejecutar solo en la página de login
+if (window.location.pathname === "/index.html" || window.location.pathname === "/") {
+    document.addEventListener("DOMContentLoaded", checkSession);
+}
 
-// Manejar el registro de usuario con validación
+// Registro de usuario
 signupBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -63,7 +67,7 @@ signupBtn.addEventListener("click", async (e) => {
     }
 });
 
-// Manejar el inicio de sesión
+// Inicio de sesión
 loginBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -86,7 +90,7 @@ loginBtn.addEventListener("click", async (e) => {
     }
 });
 
-// Manejar el cierre de sesión
+// Cerrar sesión
 logoutBtn.addEventListener("click", async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
