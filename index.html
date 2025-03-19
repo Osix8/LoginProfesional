@@ -8,8 +8,9 @@
     <script type="module" src="script.js" defer></script>
 </head>
 <body>
+
     <div class="container">
-        <h1>Login Profesional</h1>
+        <h1>🔑 Login Profesional</h1>
         
         <form id="auth-form">
             <input type="email" id="email" placeholder="Correo electrónico" required>
@@ -21,10 +22,13 @@
             <button type="button" id="signup-btn">Registrarse</button>
         </form>
 
+        <!-- Nuevo botón para ir a perfil si la sesión está activa -->
+        <a href="perfil.html" id="profile-link" style="display: none;">Ir a Mi Perfil</a>
+
         <button type="button" id="logout-btn" style="display: none;">Cerrar Sesión</button>
 
         <p id="message"></p>
     </div>
+
 </body>
 </html>
-

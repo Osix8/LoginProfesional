@@ -11,6 +11,7 @@ const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const message = document.getElementById("message");
+const profileLink = document.getElementById("profile-link");
 
 // Función para mostrar mensajes
 function showMessage(text, type) {
@@ -20,7 +21,7 @@ function showMessage(text, type) {
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Manejar la sesión sin loop infinito
+// Verificar sesión sin redirigir automáticamente
 async function checkSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -33,16 +34,13 @@ async function checkSession() {
         console.log("Usuario autenticado:", session.user.email);
         showMessage("✅ Sesión iniciada como " + session.user.email, "success");
 
-        // Si ya está en perfil, no redirigir
-        if (window.location.pathname !== "/perfil.html") {
-            setTimeout(() => {
-                window.location.href = "perfil.html";
-            }, 1000);
-        }
+        // Mostrar botón de perfil en lugar de redirigir automáticamente
+        profileLink.style.display = "block";
+        logoutBtn.style.display = "block";
     }
 }
 
-// Ejecutar solo en la página de login
+// Ejecutar la verificación de sesión en la página de login
 if (window.location.pathname === "/index.html" || window.location.pathname === "/") {
     document.addEventListener("DOMContentLoaded", checkSession);
 }
@@ -84,6 +82,8 @@ loginBtn.addEventListener("click", async (e) => {
         showMessage("❌ " + error.message, "error");
     } else {
         showMessage("✅ Bienvenido " + email, "success");
+        
+        // Redirigir a perfil.html después del login
         setTimeout(() => {
             window.location.href = "perfil.html";
         }, 1000);
