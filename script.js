@@ -10,8 +10,8 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const message = document.getElementById("message");
 const profileLink = document.getElementById("profile-link");
+const message = document.getElementById("message");
 
 // Función para mostrar mensajes
 function showMessage(text, type) {
@@ -21,7 +21,7 @@ function showMessage(text, type) {
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Verificar sesión sin redirigir automáticamente
+// Verificar sesión sin redirección automática
 async function checkSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -31,17 +31,17 @@ async function checkSession() {
     }
 
     if (session && session.user) {
-        console.log("Usuario autenticado:", session.user.email);
+        console.log("✅ Usuario autenticado:", session.user.email);
         showMessage("✅ Sesión iniciada como " + session.user.email, "success");
 
-        // Mostrar botón de perfil en lugar de redirigir automáticamente
-        profileLink.style.display = "block";
-        logoutBtn.style.display = "block";
+        // Mostrar botón de perfil y logout, pero SIN redirigir
+        if (profileLink) profileLink.style.display = "block";
+        if (logoutBtn) logoutBtn.style.display = "block";
     }
 }
 
-// Ejecutar la verificación de sesión en la página de login
-if (window.location.pathname === "/index.html" || window.location.pathname === "/") {
+// Ejecutar solo en la página de login
+if (window.location.pathname === "/" || window.location.pathname.includes("index.html")) {
     document.addEventListener("DOMContentLoaded", checkSession);
 }
 
@@ -82,8 +82,8 @@ loginBtn.addEventListener("click", async (e) => {
         showMessage("❌ " + error.message, "error");
     } else {
         showMessage("✅ Bienvenido " + email, "success");
-        
-        // Redirigir a perfil.html después del login
+
+        // Redirigir a perfil.html después del login manual
         setTimeout(() => {
             window.location.href = "perfil.html";
         }, 1000);
