@@ -10,18 +10,40 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const passwordToggle = document.getElementById("toggle-password");
 const message = document.getElementById("message");
 
 // Función para mostrar mensajes con colores
 function showMessage(text, type) {
     message.textContent = text;
-    message.className = type; // 'success' o 'error'
+    message.className = type;
     message.style.display = "block";
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Registro de usuario con validación y correo de confirmación
+// Redirección tras confirmación del correo
+async function checkSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (error) {
+        console.error("Error verificando sesión:", error.message);
+        return;
+    }
+
+    if (session && session.user) {
+        console.log("Usuario autenticado:", session.user.email);
+        showMessage("✅ Sesión iniciada como " + session.user.email, "success");
+
+        // Redirigir al usuario a su perfil
+        setTimeout(() => {
+            window.location.href = "perfil.html";
+        }, 1000);
+    }
+}
+
+// Ejecutar la verificación de sesión al cargar la página
+document.addEventListener("DOMContentLoaded", checkSession);
+
+// Manejar el registro de usuario con validación
 signupBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -29,10 +51,6 @@ signupBtn.addEventListener("click", async (e) => {
 
     if (!email || !password) {
         showMessage("❌ Ingresa un correo y contraseña", "error");
-        return;
-    }
-    if (password.length < 6) {
-        showMessage("❌ La contraseña debe tener al menos 6 caracteres", "error");
         return;
     }
 
@@ -45,7 +63,7 @@ signupBtn.addEventListener("click", async (e) => {
     }
 });
 
-// Inicio de sesión con validación
+// Manejar el inicio de sesión
 loginBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
@@ -56,45 +74,27 @@ loginBtn.addEventListener("click", async (e) => {
         return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
         showMessage("❌ " + error.message, "error");
     } else {
         showMessage("✅ Bienvenido " + email, "success");
-        logoutBtn.style.display = "block";
+        setTimeout(() => {
+            window.location.href = "perfil.html";
+        }, 1000);
     }
 });
 
-// Cerrar sesión
+// Manejar el cierre de sesión
 logoutBtn.addEventListener("click", async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
         showMessage("❌ " + error.message, "error");
     } else {
         showMessage("👋 Sesión cerrada.", "success");
-        logoutBtn.style.display = "none";
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
     }
 });
-
-// Mostrar/Ocultar contraseña
-passwordToggle.addEventListener("click", () => {
-    if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        passwordToggle.textContent = "🙈";
-    } else {
-        passwordInput.type = "password";
-        passwordToggle.textContent = "👁";
-    }
-});
-
-// Redireccionar al usuario después de la confirmación del email en Supabase
-async function checkSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        window.location.href = "https://loginprofesional.netlify.app/";
-    }
-}
-
-// Ejecutar la verificación al cargar la página
-checkSession();
