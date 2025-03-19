@@ -21,7 +21,7 @@ function showMessage(text, type) {
     setTimeout(() => { message.style.display = "none"; }, 5000);
 }
 
-// Verificar sesión sin redirección automática
+// Verificar sesión pero no asumir que está activa
 async function checkSession() {
     const { data: { session }, error } = await supabase.auth.getSession();
 
@@ -32,11 +32,14 @@ async function checkSession() {
 
     if (session && session.user) {
         console.log("✅ Usuario autenticado:", session.user.email);
-        showMessage("✅ Sesión iniciada como " + session.user.email, "success");
 
-        // Mostrar botón de perfil y logout, pero SIN redirigir
+        // Solo mostrar el botón "Ir a Mi Perfil" si el usuario hizo login manualmente
         if (profileLink) profileLink.style.display = "block";
         if (logoutBtn) logoutBtn.style.display = "block";
+    } else {
+        // Si no hay sesión, asegurarse de ocultar botones
+        if (profileLink) profileLink.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "none";
     }
 }
 
